@@ -7,15 +7,15 @@ import operator
 import base64
 
 # grab environment variables
-ENDPOINT_NAME = os.environ['ENDPOINT_NAME'] if 'ENDPOINT_NAME' in os.environ else 'image-class-endpoint'
+ENDPOINT_NAME = os.environ['ENDPOINT_NAME'] if 'ENDPOINT_NAME' in os.environ else 'recycle-guru-endpoint'
 
 session = boto3.Session()
 client = session.client("sagemaker-runtime", region_name='us-east-1')
 
-labels = ['Cat', 'Dog', 'Ernest T Bass', 'Panda', 'Water Bottle']
+labels = ['Coffee', 'Water Bottle']
 if 'LABELS' in os.environ:
     label_str = os.environ['LABELS']
-    labels = label_str.split(",").strip()
+    labels = label_str.split(",")
 
 def lambda_handler(event, context):
     print("Received event: " + json.dumps(event, indent=2))
@@ -25,7 +25,7 @@ def lambda_handler(event, context):
     payload = base64.b64decode(payload)
 
     response = client.invoke_endpoint(
-        EndpointName="image-class-endpoint",
+        EndpointName=ENDPOINT_NAME,
         Body=payload,
         ContentType='application/x-image'
     )

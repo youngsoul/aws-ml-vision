@@ -1,6 +1,8 @@
 import requests
 import base64
 import argparse
+import subprocess
+
 
 def classify_deployed(file_name):
     payload = None
@@ -10,8 +12,22 @@ def classify_deployed(file_name):
 
     return payload
 
+# Coffee,Coffee Cup,Raspberry Pie,Timmy,Water Bottle
+labels = ['Coffee', 'Coffee Cup', 'Marker', 'Raspberry Pie', 'Timmy','Water Bottle']
+voice = {
+    labels[0]: "/Users/patryan/Development/mygithub/aws-ml-vision/mp3s/speech_coffee_mug.mp3",
+    labels[1]: "/Users/patryan/Development/mygithub/aws-ml-vision/mp3s/speech_coffee_cup_recycle.mp3",
+    labels[2]: "/Users/patryan/Development/mygithub/aws-ml-vision/mp3s/speech_marker.mp3",
+    labels[3]: "/Users/patryan/Development/mygithub/aws-ml-vision/mp3s/speech_rpi.mp3",
+    labels[4]: "/Users/patryan/Development/mygithub/aws-ml-vision/mp3s/speech_timmy.mp3",
+    labels[5]: "/Users/patryan/Development/mygithub/aws-ml-vision/mp3s/speech_water_bottle.mp3"
+}
 
-labels = ['Cat', 'Dog', 'Ernest T Bass', 'Panda', 'Water Bottle']
+def play_audio(predicted_label):
+    print(f"Play: {predicted_label}")
+    audio_file = voice[predicted_label]
+
+    return_code = subprocess.call(["afplay", audio_file])
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
@@ -31,9 +47,14 @@ if __name__ == '__main__':
     response = requests.post(api_gateway_url, data=None, json=payload)
 
     response_json = response.json()
+    status_code = response_json['statusCode']
+    predicted_label = response_json['body']['predicted_label']
     print(f"Status Code: {response_json['statusCode']}")
     print(f"Predicted Label: {response_json['body']['predicted_label']}")
     print(f"Predicted Probability: {response_json['body']['predicted_probability']}")
     print("")
     print(f"All Predictions: {response_json['body']['predictions']}")
     print("-------------------")
+
+    if status_code == 200:
+        play_audio(predicted_label)

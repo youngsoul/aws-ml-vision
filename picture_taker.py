@@ -14,7 +14,7 @@ def get_video():
     return camera
 
 
-def get_pictures(picture_directory, base_image_name, image_suffix=None):
+def get_pictures(picture_directory, base_image_name, image_suffix=None, use_random=True):
 
     # make directory
     Path(picture_directory).mkdir(parents=True, exist_ok=True)
@@ -41,12 +41,17 @@ def get_pictures(picture_directory, base_image_name, image_suffix=None):
         key = cv2.waitKey(1) & 0xFF
 
         if key == ord("s"):
-            rand_val = ''.join(
-                random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(5))
-            if image_suffix:
-                image_name = f"{picture_directory}/{base_image_name}_{rand_val}_{image_suffix}.png"
+            if use_random:
+                rand_val = ''.join(
+                    random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(5))
+                rand_val = f"_{rand_val}"
             else:
-                image_name = f"{picture_directory}/{base_image_name}_{rand_val}.png"
+                rand_val = ""
+
+            if image_suffix:
+                image_name = f"{picture_directory}/{base_image_name}{rand_val}_{image_suffix}.png"
+            else:
+                image_name = f"{picture_directory}/{base_image_name}{rand_val}.png"
 
             print(f"Saving picture to: {image_name}")
             cv2.imwrite(image_name, img=frame)
@@ -63,6 +68,7 @@ if __name__ == '__main__':
     ap.add_argument("--dataset-name", type=str, required=True, help="name of the dataset")
     ap.add_argument("--image-suffix", type=str, required=False, help="suffix added to image as, _<suffix>")
     ap.add_argument("--data-dir", type=str, required=True, help="folder containing the datasets")
+    ap.add_argument("--random-part", type=str, required=False, default="true", help="true - put random string in file, false no random string")
     # ap.add_argument("-n", "--s3_path", type=str, required=True, help="sftp hostname")
 
     args = vars(ap.parse_args())
@@ -70,7 +76,15 @@ if __name__ == '__main__':
     dataset_name = args['dataset_name']
     suffix = args['image_suffix']
     data_dir = args['data_dir']
+    random_suffix = args['random_part']
+    if random_suffix == 'true':
+        random_suffix = True
+    else:
+        random_suffix = False
+
+    print(random_suffix)
+
 
     new_pictures_path = os.path.join('.', 'data', data_dir, dataset_name)
-    get_pictures(new_pictures_path, dataset_name, image_suffix=suffix)
+    get_pictures(new_pictures_path, dataset_name, image_suffix=suffix, use_random=random_suffix)
 
