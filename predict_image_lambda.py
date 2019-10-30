@@ -23,7 +23,6 @@ def lambda_handler(event, context):
     data = json.loads(json.dumps(event))
     payload = data['data']
     payload = base64.b64decode(payload)
-    print(payload)
 
     response = client.invoke_endpoint(
         EndpointName="image-class-endpoint",
