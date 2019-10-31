@@ -9,6 +9,10 @@ OpenCV 4.0.1+
 requests
 boto3
 
+## Architecture
+
+![Arch](notebook_images/recycle_guru_arch.png)
+
 ### Github
 https://github.com/youngsoul/aws-ml-vision
 
