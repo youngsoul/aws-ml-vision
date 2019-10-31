@@ -32,15 +32,14 @@ def classify_deployed(file_name):
     return payload
 
 # Coffee,Coffee Cup,Raspberry Pie,Timmy,Water Bottle
-labels = ['Coffee', 'Coffee Cup', 'Marker', 'Raspberry Pie', 'Timmy','Water Bottle', 'Unknown']
+labels = ['Coffee', 'Coffee Cup', 'Marker', 'Raspberry Pie', 'Timmy','Water Bottle']
 voice = {
     labels[0]: "This is a {} mug with a probability of {}.  It is not recyclable ",
     labels[1]: "This is a {} with a probability of {}. Please recycle this item.  ",
     labels[2]: "This is a {} with a probability of {}.  While colorful and fun you cannot recycle them.  Dont smell them, you will leave a mark on your nose.",
-    labels[3]: "This is a {} with a probability of {}.  Possibly the coolest micro computer you can buy but you cannot recycle this.",
+    labels[3]: "This is a {} with a probability of {}.  You can run SageMaker Neo on this super cool device,  but but you cannot recycle this.",
     labels[4]: "This is {} the geek monkey with a probability of {}.  He can help you answer any questions, however you cannot recycle him.  That would not be right.",
     labels[5]: "This is a {} with a probability of {}.  While you cannot recycle it, good for your for using a reusable container.",
-    labels[6]: "This item is not known to me and has a low probability. "
 }
 
 def play_audio(predicted_label, predicted_probability):
@@ -82,7 +81,7 @@ if __name__ == '__main__':
     print("-------------------")
 
     if status_code == 200:
-        if predicted_probability > 0.58:
+        if predicted_probability > 0.40:
             play_audio(predicted_label, predicted_probability)
         else:
             prob_str = f"{int(predicted_probability * 100)} percent"

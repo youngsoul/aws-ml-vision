@@ -1,9 +1,5 @@
-import imutils
 from pathlib import Path
-import random, string
 import argparse
-import time
-import os
 import cv2
 from collections import defaultdict
 

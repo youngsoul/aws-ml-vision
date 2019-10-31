@@ -6,6 +6,17 @@ import csv
 import operator
 import base64
 
+"""
+Set the following environment variables in the lambda
+
+ENDPOINT_NAME  recycle-guru-endpoint
+
+
+LABELS  Coffee,Coffee Cup,Marker,Raspberry Pie,Timmy,Water Bottle
+
+
+"""
+
 # grab environment variables
 ENDPOINT_NAME = os.environ['ENDPOINT_NAME'] if 'ENDPOINT_NAME' in os.environ else 'recycle-guru-endpoint'
 
